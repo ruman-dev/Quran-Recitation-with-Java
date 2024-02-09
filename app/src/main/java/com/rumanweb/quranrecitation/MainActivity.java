@@ -2,8 +2,13 @@ package com.rumanweb.quranrecitation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,6 +43,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
+    NetworkListener networkListener = new NetworkListener();
     ListView listView;
     ProgressBar progressBar;
     HashMap<String, String> hashMap;
@@ -134,5 +141,21 @@ public class MainActivity extends AppCompatActivity {
 
             return myView;
         }
+
+    }
+
+    @Override
+    protected void onStart() {
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+
+        unregisterReceiver(networkListener);
+        super.onStop();
     }
 }

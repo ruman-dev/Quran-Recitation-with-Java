@@ -2,6 +2,8 @@ package com.rumanweb.quranrecitation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class VideoActivity extends AppCompatActivity {
+
+    NetworkListener networkListener = new NetworkListener();
     public static String videoTitle = "";
     public static String videoId = "";
     ProgressBar progressBarVideoLayout;
@@ -40,6 +44,20 @@ public class VideoActivity extends AppCompatActivity {
             tvVideoTitle.setText(videoTitle);
         }
 
-
     }
+    @Override
+    protected void onStart() {
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+
+        unregisterReceiver(networkListener);
+        super.onStop();
+    }
+
 }
